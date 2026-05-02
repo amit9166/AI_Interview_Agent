@@ -2,7 +2,7 @@ import Payment from "../models/payment.model.js";
 import User from "../models/user.model.js";
 import razorpay from "../services/razorpay.service.js";
 import crypto from "crypto";
-export function createOrder(req,res){
+export async function createOrder(req,res){
     try {
         const {planId,amount,credits}=req.body;
         if(!amount || !credits){
@@ -17,7 +17,7 @@ export function createOrder(req,res){
 
         const order= await razorpay.orders.create(options);
         await Payment.create({
-            userId:req.user._id,
+            userId:req.userId,
             planId,
             amount,
             credits,
@@ -31,13 +31,18 @@ export function createOrder(req,res){
 }
 
 export async function verifyPayment(req,res){
+//     console.log("VERIFY HIT");
+// console.log("BODY:", req.body);
     try {
         const {razorpay_order_id,razorpay_payment_id,razorpay_signature}=req.body;
         const body=razorpay_order_id+"|"+razorpay_payment_id;
+        // console.log("SECRET:", process.env.REZORPAY_KEY_SECRET);
         const expectedSignature= crypto.createHmac("sha256",process.env.REZORPAY_KEY_SECRET)
         .update(body)
         .digest("hex");
 
+        // console.log("EXPECTED:", expectedSignature);
+// console.log("RECEIVED:", razorpay_signature);
         if(expectedSignature !== razorpay_signature){
             return res.status(400).json({message:"Invalid payment signature"})
         }
@@ -56,7 +61,7 @@ export async function verifyPayment(req,res){
         await payment.save();
 
         //add credits to user account
-        const updatedUser= await User.findByIdUpdate(payment.userId,{
+        const updatedUser= await User.findByIdAndUpdate(payment.userId,{
             $inc:{credits:payment.credits}
         },{new:true});
 
