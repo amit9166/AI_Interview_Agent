@@ -25,7 +25,7 @@ function Home(){
     const navigate=useNavigate();
     async function getUser(){
         try {
-            const result=await axios.get("http://localhost:8000/api/user/current-user",{withCredentials:true});
+            const result=await axios.get("https://ai-interview-agent-k0lf.onrender.com/api/user/current-user",{withCredentials:true});
             // console.log(result.data)
             dispatch(setUserData(result.data));
         } catch (error) {

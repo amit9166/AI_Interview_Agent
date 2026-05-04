@@ -8,7 +8,7 @@ const InterviewReport = () => {
   useEffect(()=>{
     async function fetchReport(){
       try {
-        const result=await axios.get(`http://localhost:8000/api/interview/report/${id}`,{withCredentials:true});
+        const result=await axios.get(`https://ai-interview-agent-k0lf.onrender.com/api/interview/report/${id}`,{withCredentials:true});
         // console.log(result.data);
         setReport(result.data);
       } catch (error) {

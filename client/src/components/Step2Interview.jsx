@@ -214,7 +214,7 @@ const Step2Interview = ({interviewData,onFinish}) => {
       stopMic();
       setIsSubmitting(true);
       const result = await axios.post(
-        "http://localhost:8000/api/interview/submit-answer",
+        "https://ai-interview-agent-k0lf.onrender.com/api/interview/submit-answer",
         {
           interviewId,
           questionIndex: currentIndex,
@@ -252,7 +252,7 @@ const Step2Interview = ({interviewData,onFinish}) => {
     try {
       stopMic();
       setIsMicOn(false);
-      const result=await axios.post("http://localhost:8000/api/interview/finish",{interviewId},{withCredentials:true});
+      const result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/interview/finish",{interviewId},{withCredentials:true});
       console.log(result.data);
       onFinish(result.data);
     } catch (error) {

@@ -16,7 +16,7 @@ export default function Auth({isModel=false}){
             const user=response.user;
             const name=user.displayName;
             const email=user.email;
-            const  result=await axios.post("http://localhost:8000/api/auth/google",{name,email},{withCredentials:true});
+            const  result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/auth/google",{name,email},{withCredentials:true});
             // console.log(result.data);
             dispatch(setUserData(result.data));
         } catch (error) {

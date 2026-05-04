@@ -24,7 +24,7 @@ const Step1SetUp = ({ onStart }) => {
     const formdata=new FormData();
     formdata.append("resume",resumeFile);
     try {
-      const result=await axios.post("http://localhost:8000/api/interview/resume",formdata,{withCredentials:true});
+      const result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/interview/resume",formdata,{withCredentials:true});
       // console.log(result.data);
       setRole(result.data.role || "");
       setExperience(result.data.experience || "");
@@ -43,7 +43,7 @@ const Step1SetUp = ({ onStart }) => {
   async function handleStart(){
     setLoading(true);
     try {
-      const result=await axios.post("http://localhost:8000/api/interview/generate-questions",{role,experience,mode,resumeText,projects,skills},{withCredentials:true});
+      const result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/interview/generate-questions",{role,experience,mode,resumeText,projects,skills},{withCredentials:true});
       console.log(result.data);
       if(userData){
         dispatch(setUserData({...userData,credits:result.data.creditsLeft}));

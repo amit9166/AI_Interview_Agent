@@ -8,7 +8,7 @@ const InterviewHistory = () => {
     useEffect(()=>{
         async function getMyInterviews(){
             try {
-                const result=await axios.get("http://localhost:8000/api/interview/get-interviews",{withCredentials:true});
+                const result=await axios.get("https://ai-interview-agent-k0lf.onrender.com/api/interview/get-interviews",{withCredentials:true});
                 console.log(result.data);
                 setInterviews(result.data);
             } catch (error) {

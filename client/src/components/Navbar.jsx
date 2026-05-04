@@ -18,7 +18,7 @@ export default function Navbar(){
     const [showAuth,setShowAuth]=useState(false);
     async function handleLogout(){
         try {
-            await axios.get("http://localhost:8000/api/auth/logout",{withCredentials:true});
+            await axios.get("https://ai-interview-agent-k0lf.onrender.com/api/auth/logout",{withCredentials:true});
             dispatch(setUserData(null));
             setShowCreditPopup(false);
             setShowUserPopup(false);

@@ -59,7 +59,7 @@ const Pricing = () => {
     try {
       setLoadingPlan(plan.id);
       const amount=plan.id==="basic"?100:plan.id==="pro"?500:0;
-      const result=await axios.post("http://localhost:8000/api/payment/order",{
+      const result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/payment/order",{
         planId:plan.id,
         amount,
         credits:plan.credits
@@ -76,7 +76,7 @@ const Pricing = () => {
         order_id:result.data.id,
         handler:async function(response){
           //  console.log("HANDLER RUNNING");
-          const verifypay=await axios.post("http://localhost:8000/api/payment/verify",response,{withCredentials:true});
+          const verifypay=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/payment/verify",response,{withCredentials:true});
           dispatch(setUserData(verifypay.data.user));
           alert("Payment Successful! Credits added to your account.");
           navigate("/");
