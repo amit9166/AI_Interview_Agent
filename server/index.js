@@ -14,7 +14,7 @@ const app=express();
     //     return res.json({message:"server started"})
     // })
     app.use(cors({
-        origin:"http://localhost:5173",
+        origin:"https://ai-interview-agent-client-fbz0.onrender.com",
         credentials:true
     }))
     app.use(express.json());
