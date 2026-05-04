@@ -13,6 +13,7 @@ const app=express();
 // app.get("/",(req,res)=>{
     //     return res.json({message:"server started"})
     // })
+    app.set("trust proxy", 1); // trust first proxy
     app.use(cors({
         origin:"https://ai-interview-agent-client-fbz0.onrender.com",
         credentials:true
