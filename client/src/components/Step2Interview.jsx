@@ -33,7 +33,7 @@ const Step2Interview = ({interviewData,onFinish}) => {
   const currentQuestion =questions[currentIndex];
 
   const [hasSubmitted, setHasSubmitted] = useState(false);
-// const [lastSubmittedAnswer, setLastSubmittedAnswer] = useState("");
+
 
   useEffect(()=>{
     const loadVoices=()=>{
@@ -130,7 +130,7 @@ const Step2Interview = ({interviewData,onFinish}) => {
       }else if(currentQuestion){
         await new Promise(r=>setTimeout(r,800));
         if(currentIndex===questions.length-1){
-          await speakText("Alrght, this one might be a bit more challenging.");
+          await speakText("this one might be a bit more challenging.");
         }
         await speakText(currentQuestion.question);
         // if(isMicOn){
