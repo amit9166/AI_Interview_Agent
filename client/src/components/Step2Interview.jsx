@@ -33,7 +33,7 @@ const Step2Interview = ({interviewData,onFinish}) => {
   const currentQuestion =questions[currentIndex];
 
   const [hasSubmitted, setHasSubmitted] = useState(false);
-
+const [autoTriggered, setAutoTriggered] = useState(false);
 
   useEffect(()=>{
     const loadVoices=()=>{
@@ -225,15 +225,18 @@ const Step2Interview = ({interviewData,onFinish}) => {
       setFeedback(result.data.feedback);
       setHasSubmitted(true);
 
-      await speakText(result.data.feedback);
-      setIsSubmitting(false);
+      speakText(result.data.feedback);
     } catch (error) {
       console.log(error);
+    } finally{
       setIsSubmitting(false);
     }
   }
 
+
+
   async function handleNext(){
+    setAutoTriggered(false); 
     setAnswer("");
     setFeedback("");
     setHasSubmitted(false);
@@ -241,11 +244,12 @@ const Step2Interview = ({interviewData,onFinish}) => {
       finishInterview();
       return;
     }
-    await speakText("Alright, let's move to the next question.");
-    setCurrentIndex(currentIndex+1);
-    setTimeout(()=>{
-      if(isMicOn)startMic();
-    },500);
+
+    setCurrentIndex((prev) => prev + 1);
+  // speak AFTER state update (non-blocking)
+    setTimeout(() => {
+    speakText("Alright, let's move to the next question.");
+  }, 300);
   }
 
   async function finishInterview(){
@@ -260,25 +264,30 @@ const Step2Interview = ({interviewData,onFinish}) => {
     }
   }
 
+
+  
 useEffect(() => {
-  async function autoNext() {
-    if (isIntroPhase) return;
-    if (!currentQuestion) return;
-    if (timeLeft !== 0) return;
-    if (isSubmitting) return;
-    
-    // already submitted earlier
-    if (feedback) {
-      await handleNext();
-      return;
-    }
-    // not submitted yet
-    await submitAnswer();
-    await handleNext();
+  if (autoTriggered) return;
+  if (isIntroPhase) return;
+  if (!currentQuestion) return;
+  if (timeLeft !== 0) return;
+  if (isSubmitting) return;
+
+  setAutoTriggered(true);
+
+  if (hasSubmitted) {
+    handleNext();
+  } else {
+    submitAnswer()
+      .then(() => handleNext())
+      .catch(() => setAutoTriggered(false)); // retry allowed
   }
 
-  autoNext();
-}, [timeLeft]);
+}, [timeLeft, hasSubmitted, isIntroPhase, currentQuestion, isSubmitting]);
+
+
+
+
 
   useEffect(()=>{
     return ()=>{
