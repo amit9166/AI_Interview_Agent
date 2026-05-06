@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
 import api from '../utils/api';
+import { storeAuth } from '../utils/authStorage';
 
 const Pricing = () => {
   const navigate=useNavigate();
@@ -77,6 +78,7 @@ const Pricing = () => {
         handler:async function(response){
           //  console.log("HANDLER RUNNING");
           const verifypay=await api.post("/payment/verify",response);
+          storeAuth(verifypay.data.user);
           dispatch(setUserData(verifypay.data.user));
           alert("Payment Successful! Credits added to your account.");
           navigate("/");

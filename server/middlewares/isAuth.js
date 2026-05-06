@@ -4,7 +4,10 @@ import jwt from "jsonwebtoken";
 
 export default async function isAuth(req,res,next){
     try {
-        const {token}=req.cookies;
+        const authHeader=req.headers.authorization || "";
+        const bearerToken=authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+        const {token:cookieToken}=req.cookies;
+        const token=bearerToken || cookieToken;
         // console.log("Cookies:", req.cookies);
         if(!token){
             return res.status(400).json({message:"user does not have a token"});

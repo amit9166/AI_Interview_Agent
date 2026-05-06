@@ -8,6 +8,7 @@ import { auth, provider } from "../utils/firebase";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 import api from "../utils/api";
+import { storeAuth } from "../utils/authStorage";
 export default function Auth({isModel=false}){
     const dispatch=useDispatch();
     async function handleGoogleAuth(){
@@ -17,8 +18,8 @@ export default function Auth({isModel=false}){
             const name=user.displayName;
             const email=user.email;
             const  result=await api.post("/auth/google",{name,email});
-            // console.log(result.data);
-            dispatch(setUserData(result.data));
+            storeAuth(result.data.user, result.data.token);
+            dispatch(setUserData(result.data.user));
         } catch (error) {
             console.log(error);
             dispatch(setUserData(null));

@@ -8,6 +8,7 @@ import { HiOutlineLogout } from "react-icons/hi";
 import { setUserData } from "../redux/userSlice";
 import AuthModel from "./AuthModel";
 import api from "../utils/api";
+import { clearStoredAuth } from "../utils/authStorage";
 
 export default function Navbar(){
     const {userData,authLoading}=useSelector((state)=>state.user);
@@ -19,6 +20,7 @@ export default function Navbar(){
     async function handleLogout(){
         try {
             await api.get("/auth/logout");
+            clearStoredAuth();
             dispatch(setUserData(null));
             setShowCreditPopup(false);
             setShowUserPopup(false);

@@ -9,6 +9,7 @@ import InterviewReport from './pages/InterviewReport';
 import { useDispatch } from 'react-redux';
 import { setAuthLoading, setUserData } from './redux/userSlice';
 import api from './utils/api';
+import { clearStoredAuth, getStoredUser, storeAuth } from './utils/authStorage';
 
 function App(){
   const dispatch=useDispatch();
@@ -18,8 +19,15 @@ function App(){
       try {
         const result=await api.get("/user/current-user");
         dispatch(setUserData(result.data));
+        storeAuth(result.data);
       } catch (error) {
-        dispatch(setUserData(null));
+        const status = error.response?.status;
+        if(status === 400 || status === 401){
+          clearStoredAuth();
+          dispatch(setUserData(null));
+        }else{
+          dispatch(setUserData(getStoredUser()));
+        }
       } finally {
         dispatch(setAuthLoading(false));
       }

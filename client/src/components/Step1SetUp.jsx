@@ -4,6 +4,7 @@ import {FaUserTie,FaBriefcase,FaFileUpload,FaMicrophoneAlt,FaChartLine} from "re
 import {useDispatch, useSelector} from "react-redux";
 import { setUserData } from "../redux/userSlice";
 import api from "../utils/api";
+import { storeAuth } from "../utils/authStorage";
 const Step1SetUp = ({ onStart }) => {
   const {userData}=useSelector((state)=>state.user);
   const dispatch=useDispatch();
@@ -46,7 +47,9 @@ const Step1SetUp = ({ onStart }) => {
       const result=await api.post("/interview/generate-questions",{role,experience,mode,resumeText,projects,skills});
       console.log(result.data);
       if(userData){
-        dispatch(setUserData({...userData,credits:result.data.creditsLeft}));
+        const updatedUser={...userData,credits:result.data.creditsLeft};
+        storeAuth(updatedUser);
+        dispatch(setUserData(updatedUser));
       }
       setLoading(false);
       onStart(result.data);
