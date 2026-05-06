@@ -5,9 +5,9 @@ import { motion } from "motion/react";
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import api from "../utils/api";
 export default function Auth({isModel=false}){
     const dispatch=useDispatch();
     async function handleGoogleAuth(){
@@ -16,7 +16,7 @@ export default function Auth({isModel=false}){
             const user=response.user;
             const name=user.displayName;
             const email=user.email;
-            const  result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/auth/google",{name,email},{withCredentials:true});
+            const  result=await api.post("/auth/google",{name,email});
             // console.log(result.data);
             dispatch(setUserData(result.data));
         } catch (error) {

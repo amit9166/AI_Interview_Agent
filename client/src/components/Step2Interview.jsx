@@ -7,8 +7,8 @@ import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import { useState } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
-import axios from "axios";
 import {BsArrowRight} from "react-icons/bs";
+import api from "../utils/api";
 
 
 const Step2Interview = ({interviewData,onFinish}) => {
@@ -213,14 +213,14 @@ const [autoTriggered, setAutoTriggered] = useState(false);
       if(isSubmitting)return;
       stopMic();
       setIsSubmitting(true);
-      const result = await axios.post(
-        "https://ai-interview-agent-k0lf.onrender.com/api/interview/submit-answer",
+      const result = await api.post(
+        "/interview/submit-answer",
         {
           interviewId,
           questionIndex: currentIndex,
           answer,
           timeTaken: currentQuestion.timeLimit - timeLeft,
-        },{withCredentials:true},
+        },
       );
       setFeedback(result.data.feedback);
       setHasSubmitted(true);
@@ -256,7 +256,7 @@ const [autoTriggered, setAutoTriggered] = useState(false);
     try {
       stopMic();
       setIsMicOn(false);
-      const result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/interview/finish",{interviewId},{withCredentials:true});
+      const result=await api.post("/interview/finish",{interviewId});
       console.log(result.data);
       onFinish(result.data);
     } catch (error) {

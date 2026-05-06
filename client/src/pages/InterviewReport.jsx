@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from "axios";
 import Step3Report from '../components/Step3Report';
+import api from "../utils/api";
 const InterviewReport = () => {
   const {id}=useParams();
   const [report,setReport]=useState(null);
   useEffect(()=>{
     async function fetchReport(){
       try {
-        const result=await axios.get(`https://ai-interview-agent-k0lf.onrender.com/api/interview/report/${id}`,{withCredentials:true});
+        const result=await api.get(`/interview/report/${id}`);
         // console.log(result.data);
         setReport(result.data);
       } catch (error) {

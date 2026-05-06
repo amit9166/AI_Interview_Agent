@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import {FaUserTie,FaBriefcase,FaFileUpload,FaMicrophoneAlt,FaChartLine} from "react-icons/fa";
-import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import api from "../utils/api";
 const Step1SetUp = ({ onStart }) => {
   const {userData}=useSelector((state)=>state.user);
   const dispatch=useDispatch();
@@ -24,7 +24,7 @@ const Step1SetUp = ({ onStart }) => {
     const formdata=new FormData();
     formdata.append("resume",resumeFile);
     try {
-      const result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/interview/resume",formdata,{withCredentials:true});
+      const result=await api.post("/interview/resume",formdata);
       // console.log(result.data);
       setRole(result.data.role || "");
       setExperience(result.data.experience || "");
@@ -43,7 +43,7 @@ const Step1SetUp = ({ onStart }) => {
   async function handleStart(){
     setLoading(true);
     try {
-      const result=await axios.post("https://ai-interview-agent-k0lf.onrender.com/api/interview/generate-questions",{role,experience,mode,resumeText,projects,skills},{withCredentials:true});
+      const result=await api.post("/interview/generate-questions",{role,experience,mode,resumeText,projects,skills});
       console.log(result.data);
       if(userData){
         dispatch(setUserData({...userData,credits:result.data.creditsLeft}));

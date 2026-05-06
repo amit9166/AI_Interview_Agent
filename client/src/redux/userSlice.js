@@ -4,6 +4,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     userData: null,
+    authLoading: true,
   },
   reducers: {
     setUserData: (state,action) => {
@@ -13,11 +14,14 @@ export const userSlice = createSlice({
       // immutable state based off those changes.
       // Also, no return statement is required from these functions.
       state.userData = action.payload
+    },
+    setAuthLoading: (state, action) => {
+      state.authLoading = action.payload
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const {setUserData} = userSlice.actions
+export const {setUserData, setAuthLoading} = userSlice.actions
 
 export default userSlice.reducer; 

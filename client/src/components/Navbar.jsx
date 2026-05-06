@@ -6,11 +6,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineLogout } from "react-icons/hi";
 import { setUserData } from "../redux/userSlice";
-import axios from "axios";
 import AuthModel from "./AuthModel";
+import api from "../utils/api";
 
 export default function Navbar(){
-    const {userData}=useSelector((state)=>state.user);
+    const {userData,authLoading}=useSelector((state)=>state.user);
     const [showCreditPopup,setShowCreditPopup]=useState(false);
     const [showUserPopup,setShowUserPopup]=useState(false);
     const navigate=useNavigate();
@@ -18,7 +18,7 @@ export default function Navbar(){
     const [showAuth,setShowAuth]=useState(false);
     async function handleLogout(){
         try {
-            await axios.get("https://ai-interview-agent-k0lf.onrender.com/api/auth/logout",{withCredentials:true});
+            await api.get("/auth/logout");
             dispatch(setUserData(null));
             setShowCreditPopup(false);
             setShowUserPopup(false);
@@ -42,6 +42,9 @@ export default function Navbar(){
             <div className="flex items-center gap-6 ">
                 <div className="relative">
                     <button onClick={()=>{
+                        if(authLoading){
+                            return;
+                        }
                         if(!userData){
                             setShowAuth(true);
                             return;
@@ -61,6 +64,9 @@ export default function Navbar(){
 
                 <div className="relative">
                     <button onClick={()=>{
+                        if(authLoading){
+                            return;
+                        }
                         if(!userData){
                             setShowAuth(true);
                             return;
@@ -68,7 +74,7 @@ export default function Navbar(){
                         setShowUserPopup(!showUserPopup);
                         setShowCreditPopup(false);
                     }} className="w-9 h-9 bg-black text-white rounded-full flex items-center justify-center font-semibold">
-                        {userData?userData?.name.slice(0,1).toUpperCase():<FaUserAstronaut/>}
+                        {authLoading ? "..." : userData?userData?.name.slice(0,1).toUpperCase():<FaUserAstronaut/>}
                     </button>
 
                     {showUserPopup && (

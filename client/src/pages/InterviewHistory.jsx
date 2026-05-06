@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
 import { FaArrowLeft } from 'react-icons/fa';
+import api from "../utils/api";
 const InterviewHistory = () => {
     const [interviews,setInterviews]=useState([]);
     const navigate=useNavigate();
     useEffect(()=>{
         async function getMyInterviews(){
             try {
-                const result=await axios.get("https://ai-interview-agent-k0lf.onrender.com/api/interview/get-interviews",{withCredentials:true});
+                const result=await api.get("/interview/get-interviews");
                 console.log(result.data);
                 setInterviews(result.data);
             } catch (error) {

@@ -14,8 +14,28 @@ const app=express();
     //     return res.json({message:"server started"})
     // })
     app.set("trust proxy", 1); // trust first proxy
+    const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "")
+        .split(",")
+        .map((origin)=>origin.trim())
+        .filter(Boolean);
+    const defaultAllowedOrigins = [
+        "https://ai-interview-agent-client-fbz0.onrender.com",
+    ];
+
     app.use(cors({
-        origin:"https://ai-interview-agent-client-fbz0.onrender.com",
+        origin(origin, callback){
+            const isAllowed =
+                !origin ||
+                allowedOrigins.includes(origin) ||
+                defaultAllowedOrigins.includes(origin) ||
+                origin.startsWith("http://localhost:") ||
+                origin.startsWith("http://127.0.0.1:");
+
+            if(isAllowed){
+                return callback(null, true);
+            }
+            return callback(new Error(`CORS blocked origin: ${origin}`));
+        },
         credentials:true
     }))
     app.use(express.json());

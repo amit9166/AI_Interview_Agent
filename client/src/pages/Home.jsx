@@ -1,8 +1,5 @@
-import axios from "axios";
 import React, { useState } from "react";
-import { useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux'
-import { setUserData } from "../redux/userSlice";
+import { useSelector } from 'react-redux'
 import Navbar from "../components/Navbar";
 import {BsRobot,BsMic, BsClock, BsBarChart,BsFileEarmarkText} from "react-icons/bs";
 import {HiSparkles} from "react-icons/hi";
@@ -19,24 +16,9 @@ import pdfImg from "../assets/pdf.png";
 import analyticsImg from "../assets/history.png";
 import Footer from "../components/Footer";
 function Home(){
-    const dispatch = useDispatch()
-    const {userData}=useSelector((state)=>state.user);
+    const {userData,authLoading}=useSelector((state)=>state.user);
     const [showAuth,setShowAuth]=useState(false);
     const navigate=useNavigate();
-    async function getUser(){
-        try {
-            const result=await axios.get("https://ai-interview-agent-k0lf.onrender.com/api/user/current-user",{withCredentials:true});
-            // console.log(result.data)
-            dispatch(setUserData(result.data));
-        } catch (error) {
-            console.log(error);
-            dispatch(setUserData(null));
-        }
-
-    }
-    useEffect(()=>{
-        getUser();
-    },[dispatch])
     return(
         <>
         <div className="bg-[#f3f3f3] min-h-screen">
@@ -75,6 +57,9 @@ function Home(){
                         <div className="flex flex-wrap justify-center gap-4 mt-10">
                             <motion.button
                             onClick={()=>{
+                                if(authLoading){
+                                    return;
+                                }
                                 if(!userData){
                                     setShowAuth(true);
                                     return;
@@ -88,6 +73,9 @@ function Home(){
                             </motion.button>
                             <motion.button
                             onClick={()=>{
+                                if(authLoading){
+                                    return;
+                                }
                                 if(!userData){
                                     setShowAuth(true);
                                     return;
